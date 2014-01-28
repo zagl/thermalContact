@@ -1,0 +1,54 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  2.2.2                                 |
+|   \\  /    A nd           | Web:      www.OpenFOAM.org                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      changeDictionaryDict;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dictionaryReplacement
+{
+    boundary
+    {
+        maxX
+        {
+            type            patch;
+        }
+    }
+
+    T
+    {
+        internalField   uniform 300;
+
+        boundaryField
+        {
+            ".*"
+            {
+                type            zeroGradient;
+                value           uniform 300;
+            }
+            "rightSolid_to_.*"
+            {
+                type            compressible::thermalContactResistance;
+                neighbourFieldName T;
+                kappa           solidThermo;
+                kappaName       none;
+//                 R               uniform 10;  // Thermal resistance [K/W]
+//                 d               uniform .1;  // Thickness [m]
+//                 K               uniform 100; // Conductivity [W/m/K]
+                h               uniform 1000; // Thermal contact conductance [W/m^2/K]
+                value           uniform 300;
+            }
+        }
+    }
+}
+
+// ************************************************************************* //
